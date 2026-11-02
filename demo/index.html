@@ -482,7 +482,7 @@ function drawCM() {
     td.onmouseleave = () => tip.style.display = 'none';
     td.onclick = () => showCell(t, p);
   });
-  // top four off-diagonal cells, ties kept in row order like compare.py
+  // the four biggest cells outside the diagonal
   const off = [];
   cm.forEach((row, t) => row.forEach((v, p) => { if (t !== p) off.push([v, t, p]); }));
   off.sort((a, b) => b[0] - a[0] || (a[1] * 10 + a[2]) - (b[1] * 10 + b[2]));

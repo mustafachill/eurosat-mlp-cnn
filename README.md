@@ -19,20 +19,18 @@ sh data/get_data.sh
 
 ## Running
 
-Run everything from this folder, in this order:
-
 ```
+cd ~/Developer/eurosat-mlp-cnn
+source .venv/bin/activate
 python code/mlp.py
 python code/cnn.py
-python code/compare.py
 ```
 
 - `mlp.py` trains the MLP for 20 epochs and prints the loss and validation
-  accuracy per epoch, then the test accuracy.
+  accuracy per epoch. Then it tests the model and prints the scikit-learn
+  classification report (precision, recall, F1, accuracy) and draws the
+  confusion matrix.
 - `cnn.py` does the same for the CNN with 10 epochs.
-- `compare.py` reads the test predictions of both models and prints accuracy,
-  precision, recall and F1, the most common mistakes and the recall of every
-  class. It also draws the confusion matrices and the example images.
 
 `dataset.py` and `common.py` are helper files. The other scripts import them,
 so there is no need to run them yourself. `dataset.py` loads the images and
@@ -55,4 +53,3 @@ pick a random test image or upload your own and see what both models think.
 The page also shows the data, the models, the training curves and the
 confusion matrices. If something is missing (libraries, images, models), the
 script sets it up first. Ctrl+C stops it.
-# eurosat-mlp-cnn

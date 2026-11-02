@@ -1,4 +1,5 @@
 from common import *
+from sklearn.metrics import classification_report, ConfusionMatrixDisplay
 
 model = nn.Sequential(
     nn.Conv2d(3, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
@@ -13,9 +14,10 @@ loss, val = fit(model, epochs, 'models/cnn.pt')
 for e in range(epochs):
     print(f'epoch {e + 1}: train loss {loss[e]:.4f}, val acc {val[e]:.4f}')
 
+# results on the test set
 guesses = predict(model, x_test)
-print(f'test accuracy {mean(guesses == y_test.numpy()):.4f}')
 np.save('outputs/pred_cnn.npy', guesses)
+print(classification_report(y_test, guesses, target_names=names, digits=4))
 
 x = range(1, epochs + 1)
 figure(figsize=(9, 3.5))
@@ -32,4 +34,12 @@ grid(alpha=0.3)
 suptitle('CNN training curve')
 tight_layout()
 savefig('outputs/fig_curve_cnn.png', dpi=150)
+close()
+
+figure(figsize=(8, 7))
+ConfusionMatrixDisplay.from_predictions(y_test, guesses, display_labels=names,
+                                        xticks_rotation=90, cmap='Blues', ax=gca())
+title('CNN confusion matrix, test set')
+tight_layout()
+savefig('outputs/fig_cm_cnn.png', dpi=150)
 close()

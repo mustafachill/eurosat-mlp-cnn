@@ -5,6 +5,7 @@ import os
 import numpy as np
 import torch
 from torch import nn
+from sklearn.metrics import confusion_matrix, precision_recall_fscore_support
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 folder = 'data/EuroSAT_RGB'
@@ -43,14 +44,10 @@ for m in models:
     models[m].load_state_dict(saved['model'])
     models[m].eval()
 
-    # confusion matrix and metrics from the saved test predictions, like compare.py
+    # confusion matrix and metrics from the saved test predictions
     pred = np.load('outputs/pred_' + m.lower() + '.npy')
-    cm = np.zeros((10, 10), int)
-    for i in range(len(ytest)):
-        cm[ytest[i], pred[i]] += 1
-    precision = np.diag(cm) / cm.sum(axis=0)
-    recall = np.diag(cm) / cm.sum(axis=1)
-    f1 = 2 * precision * recall / (precision + recall)
+    cm = confusion_matrix(ytest, pred)
+    precision, recall, f1, _ = precision_recall_fscore_support(ytest, pred)
 
     # the layers and how many parameters each one has
     layers, layer_params, total = [], [], 0

@@ -1,4 +1,5 @@
 from common import *
+from sklearn.metrics import classification_report, ConfusionMatrixDisplay
 
 model = nn.Sequential(nn.Flatten(), nn.Linear(12288, 256), nn.ReLU(),
                       nn.Linear(256, 10))
@@ -10,9 +11,10 @@ loss, val = fit(model, epochs, 'models/mlp.pt')
 for e in range(epochs):
     print(f'epoch {e + 1}: train loss {loss[e]:.4f}, val acc {val[e]:.4f}')
 
+# results on the test set
 guesses = predict(model, x_test)
-print(f'test accuracy {mean(guesses == y_test.numpy()):.4f}')
 np.save('outputs/pred_mlp.npy', guesses)
+print(classification_report(y_test, guesses, target_names=names, digits=4))
 
 x = range(1, epochs + 1)
 figure(figsize=(9, 3.5))
@@ -29,4 +31,12 @@ grid(alpha=0.3)
 suptitle('MLP training curve')
 tight_layout()
 savefig('outputs/fig_curve_mlp.png', dpi=150)
+close()
+
+figure(figsize=(8, 7))
+ConfusionMatrixDisplay.from_predictions(y_test, guesses, display_labels=names,
+                                        xticks_rotation=90, cmap='Blues', ax=gca())
+title('MLP confusion matrix, test set')
+tight_layout()
+savefig('outputs/fig_cm_mlp.png', dpi=150)
 close()
