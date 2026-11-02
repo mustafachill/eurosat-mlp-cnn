@@ -1,0 +1,12 @@
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# the images, get them with: sh data/get_data.sh
+data/EuroSAT_RGB/
+data/*.zip
+
+# mac and word
+.DS_Store
+~$*
